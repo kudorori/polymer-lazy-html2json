@@ -1,0 +1,52 @@
+<link rel="import" href="../polymer/polymer.html">
+<script type="text/javascript" src="bower_components/html2json/lib/Pure-JavaScript-HTML5-Parser/htmlparser.js"></script>
+<script type="text/javascript" src="bower_components/html2json/src/html2json.js"></script>
+<!--
+`lazy-html2json`
+
+
+@demo demo/index.html 
+-->
+
+<dom-module id="lazy-html2json">
+	<template>
+	
+	</template>
+	<script>
+	    Polymer({
+			is: 'lazy-html2json',
+			
+			properties: {
+				html:{
+				  type:String,
+				  notify:true
+				},
+				json:{
+				  type:Object,
+				  notify:true
+				}
+			},
+			observers:[
+				"__jsonChanged(json.*)",
+				"__htmlChanged(html)"
+			],
+			__jsonChanged:function(changed){
+				
+				if(this._setting){
+					return;
+				}
+				this._setting=true;
+				this.set("html",json2html(changed.base));
+				delete this._setting;
+			},
+			__htmlChanged:function(changed){
+				if(this._setting||changed==undefined||changed==""){
+					return;
+				}
+				this._setting=true;
+				this.set("json",html2json(changed));
+				delete this._setting;
+			}
+	    });
+	</script>
+</dom-module>
